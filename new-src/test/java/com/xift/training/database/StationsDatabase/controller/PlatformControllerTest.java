@@ -11,6 +11,7 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -39,12 +40,15 @@ public class PlatformControllerTest {
     @Test
     public void testGetPlatformById() {
         when(mockPlatformService.getPlatformById(UUID.fromString("a0713a29-bebb-4aaf-9661-1cbdd1a03d8e"))).thenReturn(new Platform());
-        final Platform result = platformControllerUnderTest.getPlatformById(UUID.fromString("314ea4ae-c8be-4351-b849-1590748d71d4"));
+        platformControllerUnderTest.getPlatformById(UUID.fromString("314ea4ae-c8be-4351-b849-1590748d71d4"));
+        verify(mockPlatformService).getPlatformById(UUID.fromString("314ea4ae-c8be-4351-b849-1590748d71d4"));
     }
 
     @Test
-    public void testGetPlatformById_PlatformServiceThrowsResourceNotFoundException() {
+    public void testGetPlatformById_PlatformServiceThrowsResourceNotFoundException() throws Exception {
         when(mockPlatformService.getPlatformById(UUID.fromString("a0713a29-bebb-4aaf-9661-1cbdd1a03d8e"))).thenThrow(ResourceNotFoundException.class);
+        assertThrows(ResourceNotFoundException.class,() -> {
+            platformControllerUnderTest.getPlatformById(UUID.fromString("a0713a29-bebb-4aaf-9661-1cbdd1a03d8e"));});
     }
 
     @Test

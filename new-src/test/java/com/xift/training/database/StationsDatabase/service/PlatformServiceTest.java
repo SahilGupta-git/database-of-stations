@@ -42,12 +42,14 @@ public class PlatformServiceTest {
     public void testGetPlatformById() {
         when(mockPlatformRepository.findById(UUID.fromString("0fd8b2dc-0f02-494d-8dc5-54dc79c45f25"))).thenReturn(Optional.of(new Platform()));
         platformServiceUnderTest.getPlatformById(UUID.fromString("0fd8b2dc-0f02-494d-8dc5-54dc79c45f25"));
+
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test//(expected = ResourceNotFoundException.class)
     public void testGetPlatformById_ThrowsResourceNotFoundException() {
         when(mockPlatformRepository.findById(UUID.fromString("0fd8b2dc-0f02-494d-8dc5-54dc79c45f25"))).thenReturn(Optional.of(new Platform()));
-        platformServiceUnderTest.getPlatformById(UUID.fromString("7d7cb6e3-7b49-48b1-a092-e6940e382e74"));
+        assertThrows(ResourceNotFoundException.class,() -> {
+        platformServiceUnderTest.getPlatformById(UUID.fromString("7d7cb6e3-7b49-48b1-a092-e6940e382e74"));});
     }
 
     @Test
@@ -66,7 +68,6 @@ public class PlatformServiceTest {
         Set<Platform> platforms=new HashSet<>();
         when(mockStationService.getStationById(UUID.fromString("6c6288a4-e0a3-4be4-815a-47d0c8d40448"))).thenReturn(new Station(platforms));
         when(mockStationService.addStation(any(Station.class))).thenReturn(new Station(platforms));
-//      when(mockStationService.getStationById(UUID.fromString("e15668ba-6a93-46e5-9e62-f62ac82611c3"))).thenThrow(ResourceNotFoundException.class);
         final Platform result = platformServiceUnderTest.addPlatform(platform, UUID.fromString("6c6288a4-e0a3-4be4-815a-47d0c8d40448"));
         assertNotNull(result);
     }

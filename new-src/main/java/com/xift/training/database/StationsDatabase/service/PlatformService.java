@@ -41,7 +41,6 @@ public class PlatformService implements PlatformImpl {
     public Platform addPlatform(PlatformDTO platform,UUID stationId) {
         Station station = stationService.getStationById(stationId);
         Platform pt = new Platform();
-        Station stationSize = new Station();
         pt.setStatusUpdate(platform.getStatusUpdate());
         int size = station.getPlatform().size();
         pt.setPlatformNo(size+1);

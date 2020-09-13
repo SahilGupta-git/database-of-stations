@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -40,24 +41,25 @@ public class StationServiceTest {
     }
 
     @Test
-    public void testSaveStation() {
+    public void testSaveStation(){
         final Station station = new Station(Set.of(new Platform()));
         when(mockStationRepository.save(any(Station.class))).thenReturn(new Station(Set.of(new Platform())));
-        final Station result = stationServiceUnderTest.saveStation(station);
+        stationServiceUnderTest.saveStation(station);
     }
 
     @Test
     public void testGetAllStations() {
         final Iterable<Station> stations = List.of(new Station(Set.of(new Platform())));
         when(mockStationRepository.findAll()).thenReturn(stations);
-        final List<Station> result = stationServiceUnderTest.getAllStations();
+        stationServiceUnderTest.getAllStations();
     }
 
     @Test
-    public void testGetStationById() {
+    public void testGetStationById() throws Exception {
         final Optional<Station> optionalStation = Optional.of(new Station(Set.of(new Platform())));
         when(mockStationRepository.findById(UUID.fromString("83e0fe3d-9ae3-4577-973d-ce990ffee022"))).thenReturn(optionalStation);
-        final Station result = stationServiceUnderTest.getStationById(UUID.fromString("83e0fe3d-9ae3-4577-973d-ce990ffee022"));
+        assertThrows(ResourceNotFoundException.class,() -> {
+        stationServiceUnderTest.getStationById(UUID.fromString("415831b3-0552-4eaf-b829-28fb86d4357b"));});
     }
 
     @Test//(expected = ResourceNotFoundException.class)
@@ -69,10 +71,11 @@ public class StationServiceTest {
     }
 
     @Test
-    public void testGetStationByNameDTO() {
+    public void testGetStationByNameDTO() throws Exception {
         final Optional<Station> optionalStation = Optional.of(new Station(Set.of(new Platform())));
         when(mockStationRepository.findByName("name")).thenReturn(optionalStation);
-        final Station result = stationServiceUnderTest.getStationByNameDTO("name");
+        assertThrows(ResourceNotFoundException.class,() -> {
+        stationServiceUnderTest.getStationByNameDTO("Resource Not Found");});
     }
 
     @Test//(expected = ResourceNotFoundException.class)
@@ -83,23 +86,25 @@ public class StationServiceTest {
     }
 
     @Test
-    public void testGetStationByCityDTO() {
+    public void testGetStationByCityDTO() throws Exception {
         final Optional<Station> optionalStation = Optional.of(new Station(Set.of(new Platform())));
         when(mockStationRepository.findByCity("city")).thenReturn(optionalStation);
-        final Station result = stationServiceUnderTest.getStationByCityDTO("city");
+        assertThrows(ResourceNotFoundException.class,() -> {
+        stationServiceUnderTest.getStationByCityDTO("city not found");});
     }
 
-    @Test(expected = ResourceNotFoundException.class)
+    @Test//(expected = ResourceNotFoundException.class)
     public void testGetStationByCityDTO_ThrowsResourceNotFoundException() {
         final Optional<Station> optionalStation = Optional.of(new Station(Set.of(new Platform())));
-        stationServiceUnderTest.getStationByCityDTO("city");
+        assertThrows(ResourceNotFoundException.class,() -> {
+        stationServiceUnderTest.getStationByCityDTO("city");});
     }
 
     @Test
     public void testAddStation() {
         final Station station = new Station(Set.of(new Platform()));
         when(mockStationRepository.save(any(Station.class))).thenReturn(new Station(Set.of(new Platform())));
-        final Station result = stationServiceUnderTest.addStation(station);
+        stationServiceUnderTest.addStation(station);
     }
 
     @Test(expected = ResourceNotFoundException.class)
@@ -108,7 +113,7 @@ public class StationServiceTest {
         final Optional<Station> optionalStation = Optional.of(new Station(Set.of(new Platform())));
         when(mockStationRepository.findById(UUID.fromString("9cc1ea2e-14d8-4676-8f0e-48bdfa88e372"))).thenReturn(optionalStation);
         when(mockStationRepository.save(any(Station.class))).thenReturn(new Station(Set.of(new Platform())));
-        final Station result = stationServiceUnderTest.updateStation(UUID.fromString("e0081294-8779-4bc3-b8ca-875827953e6c"), stationDTO);
+        stationServiceUnderTest.updateStation(UUID.fromString("e0081294-8779-4bc3-b8ca-875827953e6c"), stationDTO);
     }
 
     @Test

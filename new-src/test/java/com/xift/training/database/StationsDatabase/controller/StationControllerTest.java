@@ -26,15 +26,6 @@ public class StationControllerTest {
 
     @Mock
     private StationService mockStationService;
-//    @Mock
-//    private Station mockStation;
-//    @Mock
-//    private StationDTO mockStationDTO;
-//    @Mock
-//    private StationByCityDTO mockStationByCityDTO;
-//    @Mock
-//    private StationByNameDTO mockStationByNameDTO;
-
     private StationController stationControllerUnderTest;
 
     @Before
@@ -57,9 +48,10 @@ public class StationControllerTest {
     }
 
     @Test
-    public void testGetStationById_StationServiceThrowsResourceNotFoundException() {
+    public void testGetStationById_StationServiceThrowsResourceNotFoundException() throws Exception {
         when(mockStationService.getStationById(UUID.fromString("3a50e0bf-e556-45e8-af78-1ff46bfe2d2c"))).thenThrow(ResourceNotFoundException.class);
-        final Station result = stationControllerUnderTest.getStationById(UUID.fromString("2cc52a42-e577-4ad5-b7ce-2e9b8b59ba3c"));
+        assertThrows(ResourceNotFoundException.class, () -> {
+        stationControllerUnderTest.getStationById(UUID.fromString("3a50e0bf-e556-45e8-af78-1ff46bfe2d2c"));});
     }
 
     @Test
@@ -71,9 +63,9 @@ public class StationControllerTest {
     @Test
     public void testGetStationByNameDTO_StationServiceThrowsResourceNotFoundException() throws Exception{
         when(mockStationService.getStationByNameDTO("name")).thenThrow(ResourceNotFoundException.class);
-       // final Station result = stationControllerUnderTest.getStationByNameDTO("name");
-//        assertThrows(ResourceNotFoundException.class, () -> {
-//            stationControllerUnderTest.getStationByCityDTO("name");});
+        assertThrows(ResourceNotFoundException.class, () -> {
+        stationControllerUnderTest.getStationByNameDTO("name");});
+
     }
 
     @Test
@@ -85,7 +77,9 @@ public class StationControllerTest {
     @Test
     public void testGetStationByCityDTO_StationServiceThrowsResourceNotFoundException() {
         when(mockStationService.getStationByCityDTO("city")).thenThrow(ResourceNotFoundException.class);
-        //final Station result = stationControllerUnderTest.getStationByCityDTO("city");
+        assertThrows(ResourceNotFoundException.class, () -> {
+            stationControllerUnderTest.getStationByCityDTO("city");});
+
     }
 
     @Test
@@ -100,6 +94,7 @@ public class StationControllerTest {
         final StationDTO stationDTO = new StationDTO(UUID.fromString("c76428a0-f840-4579-bec8-258d4fea069c"), "name", "city", "status");
         when(mockStationService.updateStation(eq(UUID.fromString("7ee90124-2214-461a-a056-2bc80d9b57bd")), any(StationDTO.class))).thenReturn(new Station(Set.of(new Platform())));
         final Station result = stationControllerUnderTest.updateStation(stationDTO, UUID.fromString("56749381-201b-444b-a972-dca019e0d8da"));
+        assertNotEquals(result,stationDTO);
     }
 
     @Test
